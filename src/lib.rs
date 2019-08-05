@@ -1,6 +1,8 @@
+#![allow(dead_code)]
+
 extern crate image;
 extern crate imageproc;
-use image::{DynamicImage, Rgba, RgbaImage, GenericImage, GenericImageView};
+use image::{DynamicImage, GenericImage, GenericImageView, ImageBuffer};
 
 /// Rgb color type.
 #[derive(Debug)]
@@ -17,27 +19,26 @@ impl Rgb {
     }
 }
 
-// STRUCTS 
-
-/// Chart type, containing data, labels, and other metadata about a chart.
-#[derive(Debug)]
-pub struct Chart {
-    pub title: String,
-    pub color: Rgb,
-    pub data: Vec<u16>,
-    pub labels: Vec<String>,
-    pub height: u32, 
-    pub width: u32
+pub fn open_image(img_path: &'static str) -> DynamicImage {
+    let img = image::open(img_path).unwrap();
+    return img;
 }
 
-impl Chart {
-
-    /// Create a new chart.
-    pub fn new(title: String, color: Rgb, data: Vec<u16>, labels: Vec<String>, height: u32, width: u32) -> Chart {
-        return Chart { title: title, color: color, data: data, labels: labels, width: width, height: height};
-    }
+pub fn save_image(img: DynamicImage, img_path: &str) {
+    
+    img.save(img_path).unwrap();
 }
+
+pub fn new_with_background(width: u32, height: u32, background_color: &Rgb) -> DynamicImage {
+    let pixel =  image::Rgba([background_color.r, background_color.g, background_color.b, 255]);
+    let image_buffer = ImageBuffer::from_pixel(width, height, pixel);
+    let rgba_img = image::ImageRgba8(image_buffer);
+    return rgba_img;
+}
+
 
 pub mod text;
 pub mod drawing;
+pub mod scatterplot;
 pub mod barchart;
+pub mod linechart;

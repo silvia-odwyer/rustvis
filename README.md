@@ -9,10 +9,13 @@ rustvis allows you to create:
 - Histograms 
 - Gradient-based barcharts/histograms
 - Linecharts 
+- Scatterplots
 
+#### Output
+Charts are outputted as PNG/JPEG images, but other options such as SVG and HTML/CSS will be available soon. 
 
 ### View Example Graphics
-[]()
+![Sample graphics generated with rustvis](https://i.imgur.com/vfZHyU4.png)
 
 ### Documentation
 Documentation can be found [here](https://silvia-odwyer.github.io/rustvis/docs/rustvis/index.html).
