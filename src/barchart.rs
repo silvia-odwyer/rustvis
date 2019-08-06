@@ -16,7 +16,8 @@ pub struct Chart {
     color: Rgb,
     data: Vec<u16>,
     labels: Vec<String>,
-    hasGrid: bool,
+    x_label: String,
+    y_label: String,
     width: u32,
     height: u32
 }
@@ -24,8 +25,8 @@ pub struct Chart {
 impl Chart {
 
     /// Create a new chart.
-    pub fn new(title: String, color: Rgb, data: Vec<u16>, labels: Vec<String>, hasGrid: bool, height: u32, width: u32) -> Chart {
-        return Chart { title: title, color: color, data: data, labels: labels, hasGrid: hasGrid, width: width, height: height};
+    pub fn new(title: String, color: Rgb, data: Vec<u16>, labels: Vec<String>, x_label: String, y_label: String, width: u32, height: u32) -> Chart {
+        return Chart { title: title, color: color, data: data, labels: labels, x_label: x_label, y_label: y_label, width: width, height: height};
     }
 
     /// Get the chart's title.
@@ -163,15 +164,15 @@ pub fn draw_vertical_gradient_barchart(img: &mut DynamicImage, barchart: &Chart,
 // Draw vertical bars, either as a histogram or bar chart. 
 // This is a private function, but may become public in the future.
 fn draw_vertical_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str) {
-
+    draw_labels(img, barchart);
     let mut start_x: u32 = 20;
-    let start_y: u32 = barchart.height - 40;
-
+    let start_y_chart: u32 = barchart.height - ((barchart.height as f32 * 0.1) as u32);
+    let start_y_meta: u32 = barchart.height - ((barchart.height as f32 * 0.05) as u32);
+    let white = Rgb { r: 255, g: 255, b: 255};
     let max_item = barchart.data.iter().max().unwrap();
     let max_bar_height: f32 = barchart.height as f32 - 2.0 * (barchart.height as f32 / 10.0);
     let num_bars: u32 = barchart.data.len() as u32;
     let bar_width: u32 = ((barchart.width / num_bars) as f32 * 0.8) as u32;
-
 
     let bar_gap = match chart_type {
         "barchart" => (bar_width as f32 * 0.1) as u32,
@@ -193,14 +194,25 @@ fn draw_vertical_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str
             bar_height = max_bar_height / div;
 
         }
+        // Draw bar
+        draw_solid_rect(img, &barchart.color, bar_width as u32, bar_height as u32, start_x as i32, (start_y_chart as f32 - bar_height) as i32);
+        
+        // Draw axial notch for that bar
+        draw_solid_rect(img, &white, 1, 15, start_x as i32, start_y_chart as i32);
 
-        draw_solid_rect(img, &barchart.color, bar_width as u32, bar_height as u32, start_x as i32, (start_y as f32 - bar_height) as i32);
         start_x += bar_width + bar_gap;    
     }
 
+    // Draw title
     let yellow = Rgb{ r: 255, g: 226, b: 98};
+    // draw_text(img, &barchart.title, *barchart.width() / 2, start_y as u32, "Lato-Regular", 30.0, &yellow);
 
-    draw_text(img, &barchart.title, 10, start_y as u32, "Lato-Regular", 50.0, &yellow);
+    // Draw xLabel
+    draw_text(img, &barchart.x_label, *barchart.width() / 2, start_y_meta as u32, "Lato-Regular", 20.0, &yellow);
+
+    // Draw yLabel
+    draw_text(img, &barchart.y_label, *barchart.width() / 2, start_y_meta as u32, "Lato-Regular", 30.0, &yellow);
+
 }
 
 /// Draw a vertical barchart, where the bars are filled with a gradient.
@@ -270,6 +282,7 @@ fn draw_horizontal_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &s
             draw_filled_rect_mut(img, Rect::at(start_x, start_y).of_size(bar_width as u32, border_thickness as u32), line_pixel);
         }
     }    
+
     draw_text(img, &barchart.title, 10, start_y as u32, "Lato-Regular", 50.0, &yellow);
 }
 
@@ -420,14 +433,22 @@ pub fn draw_labels(img: &mut DynamicImage, chart: &Chart) {
     let bar_width: f32 = ((chart.width / num_bars) as f32 * 0.8);
 
     let white = Rgb { r: 255, g: 255, b: 255};
-    let mut start_x = bar_width / 2.0;
+    let mut start_x = 20.0;
 
     let y_pos_label = chart.height - 30;
     
+    let chart_type = "barchart";
+    let mut total_x_inc = 0.0;
+    let bar_gap = match chart_type {
+        "barchart" => (bar_width as f32 * 0.1) as u32,
+        "histogram" => 0,
+        _ => (bar_width as f32 * 0.1) as u32,
+    };
+    
     for label in &chart.labels {
         draw_text(img, label, start_x as u32, y_pos_label as u32, "Roboto-Regular", 30.0, &white);
-
-        start_x += bar_width;
+        total_x_inc = bar_width + bar_gap as f32;
+        start_x += total_x_inc;
     }    
 }
 
@@ -439,7 +460,7 @@ fn draw_axes(img: &mut DynamicImage, chart: &Chart) {
 
     // Origin point
     let start_x = 20.0;
-    let start_y: f32 = chart.height as f32 - 40.0;
+    let start_y: f32 = chart.height as f32 - (chart.height as f32 * 0.1);
 
     // End point on y-axis 
     let end_y_yaxis: f32 = start_y - axis_len;
@@ -452,7 +473,44 @@ fn draw_axes(img: &mut DynamicImage, chart: &Chart) {
 
     // Draw x-axis 
     draw_line_segment_mut(img, (start_x as f32, start_y as f32), (end_x_xaxis, start_y), line_pixel);
+
 }
+
+// // Draw grid onto the chart.
+// fn drawGrid(img: &mut DynamicImage, barchart: &Chart, chart_type: &str) {
+
+//     let mut start_x: u32 = 20;
+//     let start_y: u32 = barchart.height - 40;
+
+//     let max_item = barchart.data.iter().max().unwrap();
+//     let max_bar_height: f32 = barchart.height as f32 - 2.0 * (barchart.height as f32 / 10.0);
+//     let num_bars: u32 = barchart.data.len() as u32;
+//     let bar_width: u32 = ((barchart.width / num_bars) as f32 * 0.8) as u32;
+//     let white = Rgb {r: 255, g: 255, b: 255};
+
+//     let bar_gap = match chart_type {
+//         "barchart" => (bar_width as f32 * 0.1) as u32,
+//         "histogram" => 0,
+//         _ => (bar_width as f32 * 0.1) as u32,
+//     };
+
+
+//     for item in &barchart.data {
+//         let mut bar_height: f32 = 0.0;
+
+//         if *item > 0 as u16 {
+//             let div: f32 =  *max_item as f32 / *item as f32;
+//             bar_height = max_bar_height / div;
+
+//         }
+//         draw_line_segment_mut(img, (start_x as f32, start_y as f32), (end_x_xaxis, start_y), line_pixel);
+
+//         // draw_solid_rect(img, &white, 1, *barchart.height(), start_x as i32, (start_y as f32) as i32);
+
+        
+//         start_x += bar_width + bar_gap;    
+//     }
+// }
 
 // Draw an image as a bar component of a bar chart. 
 // This can be used for custom bar colours or custom bar images within bar charts.
