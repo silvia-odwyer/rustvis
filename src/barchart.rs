@@ -340,6 +340,10 @@ pub fn draw_horizontal_image_barchart(img: &mut DynamicImage, bar_img: &DynamicI
 
 
 /// Create a new vertical barchart image, and return this image.
+/// 
+/// ### Arguments
+/// * `bar_img` - Image the bars should contain.
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_vertical_image_barchart(bar_img: &DynamicImage, barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
 
@@ -349,6 +353,10 @@ pub fn create_vertical_image_barchart(bar_img: &DynamicImage, barchart: &Chart) 
 }
 
 /// Create a new horizontal barchart image, and return this image.
+/// 
+/// ### Arguments
+/// * `bar_img` - Image the bars should contain.
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_horizontal_image_barchart(bar_img: &DynamicImage, barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
 
@@ -358,6 +366,9 @@ pub fn create_horizontal_image_barchart(bar_img: &DynamicImage, barchart: &Chart
 }
 
 /// Create a new horizontal histogram chart, and return this image.
+/// 
+/// ### Arguments
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_horizontal_histogram(barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
 
@@ -367,6 +378,9 @@ pub fn create_horizontal_histogram(barchart: &Chart) -> DynamicImage {
 }
 
 ///  Create a new vertical histogram chart, and return this image.
+/// 
+/// ### Arguments
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_vertical_histogram(barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
     let mut img = new_with_background(barchart.width, barchart.height, &slate_grey);
@@ -375,6 +389,9 @@ pub fn create_vertical_histogram(barchart: &Chart) -> DynamicImage {
 }
 
 ///  Create a new horizontal barchart, and return this image.
+/// 
+/// ### Arguments
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_horizontal_barchart(barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
     let mut img = new_with_background(barchart.width, barchart.height, &slate_grey);
@@ -383,44 +400,15 @@ pub fn create_horizontal_barchart(barchart: &Chart) -> DynamicImage {
 }
 
 ///  Create a new vertical barchart, and return this image.
+/// 
+/// ### Arguments
+/// * `barchart` - Chart struct, which contains all data & meta-data about the barchart.
 pub fn create_vertical_barchart(barchart: &Chart) -> DynamicImage {
     let slate_grey = Rgb { r: 33, g: 33, b: 36};
     let mut img = new_with_background(barchart.width, barchart.height, &slate_grey);
     draw_vertical_barchart(&mut img, &barchart);
     return img;
 }
-
-
-/// Draw a linechart and accentuate the points, with a specified title and data.
-// pub fn draw_linechart_points(mut img: &mut DynamicImage, chart: &Chart) {
-//     draw_labels(&mut img, chart);
-//     let axis_len = (chart.width as f32 * 0.8);
-//     let y_origin = 20.0 + axis_len;
-
-//     let x_inc = axis_len / chart.data.len() as f32;
-
-//     let mut start_x = 20.0;
-//     let line_pixel = image::Rgba([255, 167, 90, 255]);
-//     let max_item = chart.data.iter().max().unwrap();
-
-//     let mut start_y = y_origin;
-    
-//     for item in &chart.data {
-//         let div: f32 = *max_item as f32 / *item as f32;
-
-//         let y_dist = y_origin - (axis_len / div);
-//         draw_line_segment_mut(img, (start_x as f32, start_y as f32), (start_x + x_inc, y_dist), line_pixel);
-
-//         // draw circle at end coordinate.
-//         // let circle_radius = ;
-//         // let white_pixel = ;
-//         draw_filled_circle_mut(img, (start_x + x_inc, y_dist), circle_radius, white_pixel);
-
-//         start_x += x_inc;
-//         start_y = y_dist;
-//     }
-
-// }
 
 // Draw labels onto the axes of a chart, typically for bar or line charts.
 pub fn draw_labels(img: &mut DynamicImage, chart: &Chart) {

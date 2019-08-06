@@ -8,6 +8,7 @@ use crate::barchart::{Chart, draw_labels};
 use crate::drawing::*;
 use imageproc::rect::Rect;
 use imageproc::pixelops::interpolate;
+use crate::new_with_background;
 
 /// Draw a linechart, with a specified title and data.
 ///
@@ -27,23 +28,49 @@ pub fn draw_linechart_points(mut img: &mut DynamicImage, chart: &Chart) {
     draw_lines(img, chart, true);
 }
 
+/// Create a linechart and return this as an image.
+///
+/// #### Arguments
+/// * `chart` - Chart struct, which contains all data & meta-data about the barchart.
+pub fn create_linechart(chart: &Chart) -> DynamicImage {
+    let slate_grey = Rgb { r: 33, g: 33, b: 36};
+    let mut img = new_with_background(*chart.width(), *chart.height(), &slate_grey);
+    
+    draw_lines(&mut img, chart, false);
+    return img;
+}
+
+/// Create a linechart with points and return this as an image.
+///
+/// #### Arguments
+/// * `chart` - Chart struct, which contains all data & meta-data about the barchart.
+pub fn create_linechart_points(chart: &Chart) -> DynamicImage {
+    let slate_grey = Rgb { r: 33, g: 33, b: 36};
+    let mut img = new_with_background(*chart.width(), *chart.height(), &slate_grey);
+    
+    draw_lines(&mut img, chart, true);
+    return img;
+}
+
+// Draw linechart onto the image.
 fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
     draw_labels(&mut img, chart);
-    let axis_len = chart.width as f32 * 0.8;
+    let axis_len = *chart.width() as f32 * 0.8;
     let y_origin = 20.0 + axis_len;
 
-    let x_inc = axis_len / chart.data.len() as f32;
+    let x_inc = axis_len / chart.data().len() as f32;
 
     let mut start_x = 20.0;
-    let line_pixel = image::Rgba([255, 167, 90, 255]);
+    let line_pixel = image::Rgba([chart.color().r, chart.color().g, chart.color().b, 255]);
 
     let white = image::Rgba([155, 155, 155, 255]);
 
-    let max_item = chart.data.iter().max().unwrap();
+    let chart_data = chart.data();
+    let max_item = chart_data.iter().max().unwrap();
 
     let mut start_y = y_origin;
     
-    for item in &chart.data {
+    for item in chart_data {
         let div: f32 = *max_item as f32 / *item as f32;
 
         let end_x: i32 = (start_x + x_inc) as i32;
