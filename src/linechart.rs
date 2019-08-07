@@ -4,7 +4,7 @@ use image::{DynamicImage, Rgba, RgbaImage, GenericImage};
 use imageproc::drawing::*;
 use crate::{Rgb};
 use crate::text::draw_text;
-use crate::barchart::{Chart, draw_labels};
+use crate::barchart::{Chart, draw_labels, draw_y_axial_notches};
 use crate::drawing::*;
 use imageproc::rect::Rect;
 use imageproc::pixelops::interpolate;
@@ -58,7 +58,7 @@ fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
     let axis_len_width = *chart.width() as f32 * 0.8;
     let axis_len_height = *chart.height() as f32 * 0.8;
     
-    let y_origin = 20.0 + axis_len_height;
+    let y_origin = *chart.height() as f32 - (*chart.height() as f32 * 0.1);
 
     let x_inc = axis_len_width / chart.data().len() as f32;
 
@@ -66,14 +66,21 @@ fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
     let line_pixel = image::Rgba([chart.color().r, chart.color().g, chart.color().b, 255]);
 
     let white = image::Rgba([155, 155, 155, 255]);
+    let white_rgb = Rgb {r: 255, g: 255, b:255};
 
     let chart_data = chart.data();
     let max_item = chart_data.iter().max().unwrap();
 
     let mut start_y = y_origin;
-    
-    for item in chart_data {
-        let div: f32 = *max_item as f32 / *item as f32;
+    let start_y_meta: u32 = chart.height() - ((*chart.height() as f32 * 0.1) as u32);
+
+    let div: f32 = *max_item as f32 / chart_data[0] as f32;
+    let end_y: i32 = (y_origin - (axis_len_height / div)) as i32;
+    start_y = end_y as f32;
+
+    for i  in 1..chart_data.len() {
+        let item = chart_data[i];
+        let div: f32 = *max_item as f32 / item as f32;
 
         let end_x: i32 = (start_x + x_inc) as i32;
         let end_y: i32 = (y_origin - (axis_len_height / div)) as i32;
@@ -86,7 +93,13 @@ fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
             draw_filled_circle_mut(img, (end_x, end_y), 4, white);
         }
 
+        // Draw x axial notch for that bar
+        draw_solid_rect(img, &white_rgb, 1, 10, start_x as i32, start_y_meta as i32);
+
         start_x += x_inc;
         start_y = end_y as f32;
     }
+    draw_solid_rect(img, &white_rgb, 1, 10, start_x as i32, start_y_meta as i32);
+
+    draw_y_axial_notches(img, chart);
 }
