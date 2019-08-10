@@ -20,6 +20,21 @@ Charts are outputted as PNG/JPEG images, but other options such as SVG and HTML/
 ### Documentation
 Documentation can be found [here](https://silvia-odwyer.github.io/rustvis/docs/rustvis/index.html).
 
+`rustvis` allows you to either generate a graphic with a size of your choice, or draw charts onto existing graphics by passing
+a mutable reference to the drawing function. 
+
+### Appearance/Customization
+`rustvis` provides flexible customisation options for the appearance of charts. These include:
+
+- Preset gradients for visual effect
+- Changing the background colors of the graphs
+- Whether to include a grid or not
+- The chart's line colors and x/y axes
+- Height/width of the chart. 
+- Replacing the bars of charts with images 
+- Bar/line colors 
+
+
 ## Run The Examples
 
 <!-- ## Cargo Status -->
