@@ -1,11 +1,10 @@
 extern crate image;
 extern crate imageproc;
-use image::{DynamicImage, Rgba, RgbaImage, GenericImage};
+use image::{DynamicImage, Rgba};
 use imageproc::drawing::*;
 use crate::{Rgb};
 use crate::text::draw_text;
 use crate::drawing::*;
-use imageproc::pixelops::interpolate;
 use imageproc::rect::Rect;
 use crate::new_with_background;
 
@@ -66,12 +65,12 @@ impl Chart {
     }
     
     /// Set the chart's title.
-    pub fn setTitle(&mut self, title: String) {
+    pub fn set_title(&mut self, title: String) {
         self.title = title;
     }
 
     /// Set the chart's line color.
-    pub fn setColor(&mut self, color: Rgb) {
+    pub fn set_color(&mut self, color: Rgb) {
         self.color = color;
     }
 
@@ -159,9 +158,6 @@ pub fn draw_vertical_gradient_barchart(img: &mut DynamicImage, barchart: &Chart,
     let bar_width: u32 = ((barchart.width / num_bars) as f32 * 0.8) as u32;
     let space_between_bars: u32 = (bar_width as f32 * 0.1) as u32;
 
-    let yellow = Rgb{ r: 255, g: 226, b: 98};
-    let white = Rgb { r: 255, g: 255, b: 255};
-
     for item in &barchart.data {
         let div: f32 =  *max_item as f32 / *item as f32;
         let bar_height: f32 = max_bar_height / div as f32;
@@ -213,7 +209,7 @@ fn draw_vertical_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str
             // Draw axial notch for that bar
             draw_solid_rect(img, &white, 1, 10, start_x as i32, start_y_chart as i32);
 
-            if (chart_type == "histogram") {
+            if chart_type == "histogram" {
                 draw_filled_rect_mut(img, Rect::at(start_x as i32 + border_thickness, (start_y_chart as f32 - bar_height) as i32) .of_size((bar_width - border_thickness as f32) as u32, border_thickness as u32), line_pixel);
                 draw_filled_rect_mut(img, Rect::at(start_x as i32, (start_y_chart as f32 - bar_height) as i32) .of_size(border_thickness as u32, bar_height as u32), line_pixel);
 
@@ -222,7 +218,7 @@ fn draw_vertical_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str
         start_x += bar_width as u32 + bar_gap;    
     }
     
-    if (chart_type == "histogram") {
+    if chart_type == "histogram" {
         draw_filled_rect_mut(img, Rect::at((start_x) as i32, (start_y_chart as f32 - bar_height) as i32) .of_size(border_thickness as u32, bar_height as u32), line_pixel);
     }
 
@@ -249,7 +245,7 @@ fn draw_horizontal_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &s
     let max_item = barchart.data.iter().max().unwrap();
     let max_bar_width: f32 = barchart.width as f32 - 2.0 * (barchart.width as f32 / 10.0);
     let num_bars: u32 = barchart.data.len() as u32;
-    let bar_height: f32 = ((barchart.height / num_bars) as f32 * 0.8);
+    let bar_height: f32 = (barchart.height / num_bars) as f32 * 0.8;
 
     let space_between_bars = match chart_type {
         "barchart" => (bar_height as f32 * 0.1) as u32,
@@ -257,7 +253,6 @@ fn draw_horizontal_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &s
         _ => 30
     };
 
-    let yellow = Rgb{ r: 255, g: 226, b: 98};
     let line_pixel = Rgba([0, 0, 0, 255]);
 
     let border_thickness: i32 = match chart_type {
@@ -304,8 +299,6 @@ pub fn draw_horizontal_gradient_barchart(img: &mut DynamicImage, barchart: &Char
     let num_bars: u32 = barchart.data.len() as u32;
     let bar_height: u32 = ((barchart.height / num_bars) as f32 * 0.8) as u32;
     let space_between_bars: u32 = (bar_height as f32 * 0.1) as u32;
-
-    let yellow = Rgb{ r: 255, g: 226, b: 98};
 
     for item in &barchart.data {
         let div: f32 =  *max_item as f32 / *item as f32;
@@ -367,7 +360,7 @@ pub fn draw_horizontal_image_barchart(img: &mut DynamicImage, bar_img: &DynamicI
     let max_item = barchart.data.iter().max().unwrap();
     let max_bar_width: f32 = barchart.width as f32 - 2.0 * (barchart.width as f32 / 10.0);
     let num_bars: u32 = barchart.data.len() as u32;
-    let bar_height: f32 = ((barchart.height / num_bars) as f32 * 0.8);
+    let bar_height: f32 = (barchart.height / num_bars) as f32 * 0.8;
     let space_between_bars: u32 = (bar_height as f32 * 0.1) as u32;
 
     let yellow = Rgb{ r: 255, g: 226, b: 98};
@@ -459,12 +452,11 @@ pub fn create_vertical_barchart(barchart: &Chart) -> DynamicImage {
 pub fn draw_labels(img: &mut DynamicImage, chart: &Chart) {
     draw_axes(img, chart);
     let axis_len = chart.width as f32 * 0.8;
-    let x_inc = axis_len / chart.data.len() as f32 * 1.05;
+    let _x_inc = axis_len / chart.data.len() as f32 * 1.05;
 
     let num_bars: u32 = chart.data.len() as u32;
-    let bar_width: f32 = ((chart.width / num_bars) as f32 * 0.8);
+    let bar_width: f32 = (chart.width / num_bars) as f32 * 0.8;
 
-    let white = Rgb { r: 255, g: 255, b: 255};
     let mut start_x = 20.0;
 
     let y_pos_label = chart.height - 30;
@@ -513,16 +505,16 @@ pub fn draw_y_axial_notches_vertical(img: &mut DynamicImage, barchart: &Chart) {
     // Draw y axial notches 
     let mut start_y: f32 = barchart.height as f32 * 0.9;
 
-    let axis_height = (*barchart.height() as f32 * 0.8);
+    let axis_height = *barchart.height() as f32 * 0.8;
 
     let max_item = *barchart.data().iter().max().unwrap();
 
     // Draw y axial notch for that bar
     let mut y_label = 0.0;
-    let mut y_unit: f32 = max_item as f32 / barchart.data.len() as f32;
+    let y_unit: f32 = max_item as f32 / barchart.data.len() as f32;
 
     let y_inc = axis_height / barchart.data().len() as f32;
-    for i in 0..barchart.data().len() {
+    for _i in 0..barchart.data().len() {
         draw_solid_rect(img, &barchart.meta_color(), 10, 1, 20, start_y as i32);
         let fmt_y_label = format!("{:.1}", y_label);
         println!("{}", fmt_y_label);
@@ -539,17 +531,17 @@ pub fn draw_x_axial_notches_horizontal(img: &mut DynamicImage, barchart: &Chart)
     // Draw x axial notches 
     let mut start_x: f32 = 20.0;
 
-    let axis_width = (*barchart.width() as f32 * 0.8);
+    let axis_width = *barchart.width() as f32 * 0.8;
 
     let max_item = *barchart.data().iter().max().unwrap();
 
     // Draw y axial notch for that bar
     let mut x_label = 0.0;
-    let mut x_unit: f32 = max_item as f32 / barchart.data.len() as f32;
+    let x_unit: f32 = max_item as f32 / barchart.data.len() as f32;
 
     let x_inc = axis_width / barchart.data().len() as f32;
     let chart_height = barchart.height();
-    for i in 0..barchart.data().len() {
+    for _i in 0..barchart.data().len() {
         draw_solid_rect(img, &barchart.meta_color(), 1, 10, start_x as i32, (*chart_height as f32 * 0.8) as i32);
         let fmt_x_label = format!("{:.1}", x_label);
         draw_text(img, &fmt_x_label, start_x as u32, 0, "Lato-Regular", 10.0, &barchart.meta_color());

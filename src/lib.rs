@@ -2,7 +2,7 @@
 
 extern crate image;
 extern crate imageproc;
-use image::{DynamicImage, GenericImage, GenericImageView, ImageBuffer};
+use image::{DynamicImage, ImageBuffer};
 
 /// Rgb color type.
 #[derive(Debug)]
@@ -39,6 +39,5 @@ pub fn new_with_background(width: u32, height: u32, background_color: &Rgb) -> D
 
 pub mod text;
 pub mod drawing;
-pub mod scatterplot;
 pub mod barchart;
 pub mod linechart;

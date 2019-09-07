@@ -1,12 +1,10 @@
 extern crate image;
 extern crate imageproc;
-use image::{DynamicImage, Rgba, RgbaImage, GenericImage};
+use image::{DynamicImage};
 use imageproc::drawing::*;
 use crate::{Rgb};
-use crate::text::draw_text;
 use crate::barchart::{Chart, draw_labels, draw_y_axial_notches_vertical};
 use crate::drawing::*;
-use imageproc::rect::Rect;
 use imageproc::pixelops::interpolate;
 use crate::new_with_background;
 
@@ -15,7 +13,7 @@ use crate::new_with_background;
 /// #### Arguments
 /// * `img` - Image to draw the linechart onto.
 /// * `chart` - Chart struct, which contains all data & meta-data about the barchart.
-pub fn draw_linechart(mut img: &mut DynamicImage, chart: &Chart) {
+pub fn draw_linechart(img: &mut DynamicImage, chart: &Chart) {
     draw_lines(img, chart, false);
 }
 
@@ -24,7 +22,7 @@ pub fn draw_linechart(mut img: &mut DynamicImage, chart: &Chart) {
 /// #### Arguments
 /// * `img` - Image to draw the linechart onto.
 /// * `chart` - Chart struct, which contains all data & metadata about the barchart.
-pub fn draw_linechart_points(mut img: &mut DynamicImage, chart: &Chart) {
+pub fn draw_linechart_points(img: &mut DynamicImage, chart: &Chart) {
     draw_lines(img, chart, true);
 }
 
@@ -89,7 +87,7 @@ fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
             draw_antialiased_line_segment_mut(img, (start_x as i32 + i, start_y as i32), (end_x + i, end_y), line_pixel, interpolate);
         }
 
-        if (points) { 
+        if points { 
             draw_filled_circle_mut(img, (end_x, end_y), 4, white);
         }
 

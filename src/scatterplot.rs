@@ -1,12 +1,8 @@
 extern crate image;
 extern crate imageproc;
-use image::{DynamicImage, Rgba, RgbaImage, GenericImage};
+use image::{DynamicImage};
 use imageproc::drawing::*;
-use crate::{Rgb};
-use crate::text::draw_text;
 use crate::barchart::{Chart, draw_labels};
-use crate::drawing::*;
-use imageproc::rect::Rect;
 use imageproc::pixelops::interpolate;
 
 pub fn draw_scatterplot(mut img: &mut DynamicImage, chart: &Chart) {
