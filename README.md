@@ -9,7 +9,6 @@ rustvis allows you to create:
 - Histograms 
 - Gradient-based barcharts/histograms
 - Linecharts 
-- Scatterplots
 
 #### Output
 Charts are outputted as PNG/JPEG images, but other options such as SVG and HTML/CSS will be available soon. 
@@ -18,7 +17,7 @@ Charts are outputted as PNG/JPEG images, but other options such as SVG and HTML/
 ![Sample graphics generated with rustvis](https://i.imgur.com/vfZHyU4.png)
 
 ### Documentation
-Documentation can be found [here](https://silvia-odwyer.github.io/rustvis/docs/rustvis/index.html).
+Documentation can be found [here](https://silvia-odwyer.github.io/rustvis/docs/index.html).
 
 `rustvis` allows you to either generate a graphic with a size of your choice, or draw charts onto existing graphics by passing
 a mutable reference to the drawing function. 
@@ -55,7 +54,8 @@ cd crate
 cargo run --release 
 ```
 
-See [/examples](https://github.com/silvia-odwyer/gdl/tree/master/crate/examples) for more examples.
+#### Notice
+While the core functionality is implemented, this is a work-in-progress, and is in heavy development.
 
 #### WebAssembly
 Coming soon:tm:
