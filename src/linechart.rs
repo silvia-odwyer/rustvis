@@ -4,7 +4,7 @@ use image::{DynamicImage, Rgba, RgbaImage, GenericImage};
 use imageproc::drawing::*;
 use crate::{Rgb};
 use crate::text::draw_text;
-use crate::barchart::{Chart, draw_labels, draw_y_axial_notches};
+use crate::barchart::{Chart, draw_labels, draw_y_axial_notches_vertical};
 use crate::drawing::*;
 use imageproc::rect::Rect;
 use imageproc::pixelops::interpolate;
@@ -101,5 +101,5 @@ fn draw_lines(mut img: &mut DynamicImage, chart: &Chart, points: bool) {
     }
     draw_solid_rect(img, &white_rgb, 1, 10, start_x as i32, start_y_meta as i32);
 
-    draw_y_axial_notches(img, chart);
+    draw_y_axial_notches_vertical(img, chart);
 }

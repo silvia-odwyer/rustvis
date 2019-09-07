@@ -7,38 +7,6 @@ use palette::{LinSrgba, Gradient, Lch, Srgba};
 use palette::encoding::pixel::Pixel;
 use crate::{Rgb};
 
-/// Draw a solid rectangle with a given background colour. 
-/// 
-/// # Arguments
-/// * `img` - A mutable ref to a DynamicImage.
-/// * `background_color` - Rgb color of rectangle.
-/// * `width` - u32 - Desired width of rectangle.
-/// * `height` - u32 - Desired height of rectangle.
-/// * `x_pos` - X-coordinate of top corner of rectangle on `img`
-/// * `y_pos` - y-coordinate of top corner of rectangle on `img`
-pub fn draw_solid_rect(img: &mut DynamicImage, background_color: &Rgb, width: u32, height: u32, x_pos: i32, y_pos: i32) {    
-    draw_filled_rect_mut(img, 
-                        Rect::at(x_pos, y_pos).of_size(width, height), 
-                        Rgba([background_color.r, background_color.g, 
-                        background_color.b, 255u8]));
-
-}
-
-
-/// Preset: Draw a gradient rectangle filled with a gradient.
-/// 
-/// ### Arguments
-/// * `img` - A mutable ref to a DynamicImage.
-/// * `width` - u32 - Desired width of gradient rectangle.
-/// * `height` - u32 - Desired height of gradient rectangle.
-/// * `x_pos` - X-coordinate of top corner of rectangle on `img`
-/// * `y_pos` - y-coordinate of top corner of rectangle on `img`
-/// * `preset_name` - Name of the preset. Examples include "lemongrass", "pink_blue", "pastel_pink", "pastel_mauve"
-pub fn draw_preset_rect_gradient(img: &mut DynamicImage, width: u32, height: u32, x_pos: u32, y_pos: u32, preset_name: &str) {
-    let rect = create_gradient_preset(width, height, preset_name);
-        
-    image::imageops::overlay(img, &rect, x_pos, y_pos);
-}
 
 /// Create a gradient element in the shape of a Rect.
 /// 
@@ -136,4 +104,37 @@ pub fn create_gradient_preset(width: u32, height: u32, name: &str) -> DynamicIma
     }
     let rgba_img = image::ImageRgba8(image);
     return rgba_img;
+}
+
+/// Draw a solid rectangle with a given background colour. 
+/// 
+/// # Arguments
+/// * `img` - A mutable ref to a DynamicImage.
+/// * `background_color` - Rgb color of rectangle.
+/// * `width` - u32 - Desired width of rectangle.
+/// * `height` - u32 - Desired height of rectangle.
+/// * `x_pos` - X-coordinate of top corner of rectangle on `img`
+/// * `y_pos` - y-coordinate of top corner of rectangle on `img`
+pub fn draw_solid_rect(img: &mut DynamicImage, background_color: &Rgb, width: u32, height: u32, x_pos: i32, y_pos: i32) {    
+    draw_filled_rect_mut(img, 
+                        Rect::at(x_pos, y_pos).of_size(width, height), 
+                        Rgba([background_color.r, background_color.g, 
+                        background_color.b, 255u8]));
+
+}
+
+
+/// Preset: Draw a gradient rectangle filled with a gradient.
+/// 
+/// ### Arguments
+/// * `img` - A mutable ref to a DynamicImage.
+/// * `width` - u32 - Desired width of gradient rectangle.
+/// * `height` - u32 - Desired height of gradient rectangle.
+/// * `x_pos` - X-coordinate of top corner of rectangle on `img`
+/// * `y_pos` - y-coordinate of top corner of rectangle on `img`
+/// * `preset_name` - Name of the preset. Examples include "lemongrass", "pink_blue", "pastel_pink", "pastel_mauve"
+pub fn draw_preset_rect_gradient(img: &mut DynamicImage, width: u32, height: u32, x_pos: u32, y_pos: u32, preset_name: &str) {
+    let rect = create_gradient_preset(width, height, preset_name);
+        
+    image::imageops::overlay(img, &rect, x_pos, y_pos);
 }

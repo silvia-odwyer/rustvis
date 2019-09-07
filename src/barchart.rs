@@ -150,7 +150,7 @@ pub fn draw_vertical_histogram(img: &mut DynamicImage, histogram: &Chart) {
 /// * `preset` - Preset name for the gradient. Can be: "pinkblue", "pastel_pink", "pastel_mauve", "lemongrass"
 pub fn draw_vertical_gradient_barchart(img: &mut DynamicImage, barchart: &Chart, preset: &str) {
     draw_labels(img, barchart);
-    let mut start_x: u32 = 20;
+    let mut start_x: u32 = 21;
     let start_y: u32 = barchart.height - ((barchart.height as f32 * 0.1) as u32);
 
     let max_item = barchart.data.iter().max().unwrap();
@@ -170,8 +170,8 @@ pub fn draw_vertical_gradient_barchart(img: &mut DynamicImage, barchart: &Chart,
         start_x += bar_width + space_between_bars;    
     }    
 
-    draw_text(img, &barchart.title, barchart.height, start_y as u32, "Lato-Regular", 20.0, &white);
-    draw_y_axial_notches(img, barchart);
+    // draw_text(img, &barchart.title, barchart.height, start_y as u32, "Lato-Regular", 20.0, &white);
+    draw_y_axial_notches_vertical(img, barchart);
 }
 
 // Draw vertical bars, either as a histogram or bar chart. 
@@ -235,15 +235,15 @@ fn draw_vertical_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str
     // Draw yLabel
     draw_text(img, &barchart.y_label, *barchart.width() / 2, start_y_meta as u32, "Lato-Regular", 30.0, barchart.meta_color());
 
-    draw_y_axial_notches(img, barchart);
+    draw_y_axial_notches_vertical(img, barchart);
 
 }
 
 // Draw a horizontal chart, either as a histogram or as a barchart,
 // with horizontal bars.
 fn draw_horizontal_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &str) {
-
-    let start_x: i32 = 20;
+    draw_axes(img, barchart);
+    let start_x: i32 = 21;
     let mut start_y: i32 = 20;
 
     let max_item = barchart.data.iter().max().unwrap();
@@ -284,7 +284,8 @@ fn draw_horizontal_bars(img: &mut DynamicImage, barchart: &Chart, chart_type: &s
     }    
     draw_filled_rect_mut(img, Rect::at(start_x, start_y).of_size((bar_width + border_thickness as f32) as u32, border_thickness as u32), line_pixel);
 
-    draw_text(img, &barchart.title, 10, start_y as u32, "Lato-Regular", 50.0, &yellow);
+    //draw_text(img, &barchart.title, 10, start_y as u32, "Lato-Regular", 50.0, &yellow);
+    draw_x_axial_notches_horizontal(img, barchart);
 }
 
 /// Draw a vertical barchart, where the bars are filled with a gradient.
@@ -507,7 +508,7 @@ fn draw_axes(img: &mut DynamicImage, chart: &Chart) {
 
 }
 
-pub fn draw_y_axial_notches(img: &mut DynamicImage, barchart: &Chart) {
+pub fn draw_y_axial_notches_vertical(img: &mut DynamicImage, barchart: &Chart) {
     
     // Draw y axial notches 
     let mut start_y: f32 = barchart.height as f32 * 0.9;
@@ -523,7 +524,9 @@ pub fn draw_y_axial_notches(img: &mut DynamicImage, barchart: &Chart) {
     let y_inc = axis_height / barchart.data().len() as f32;
     for i in 0..barchart.data().len() {
         draw_solid_rect(img, &barchart.meta_color(), 10, 1, 20, start_y as i32);
-        draw_text(img, &y_label.to_string(), 0, start_y as u32, "Lato-Regular", 10.0, &barchart.meta_color());
+        let fmt_y_label = format!("{:.1}", y_label);
+        println!("{}", fmt_y_label);
+        draw_text(img, &fmt_y_label, 0, start_y as u32, "Lato-Regular", 10.0, &barchart.meta_color());
 
         start_y -= y_inc;
         y_label += y_unit;
@@ -531,6 +534,31 @@ pub fn draw_y_axial_notches(img: &mut DynamicImage, barchart: &Chart) {
     }
 }
 
+pub fn draw_x_axial_notches_horizontal(img: &mut DynamicImage, barchart: &Chart) {
+        
+    // Draw x axial notches 
+    let mut start_x: f32 = 20.0;
+
+    let axis_width = (*barchart.width() as f32 * 0.8);
+
+    let max_item = *barchart.data().iter().max().unwrap();
+
+    // Draw y axial notch for that bar
+    let mut x_label = 0.0;
+    let mut x_unit: f32 = max_item as f32 / barchart.data.len() as f32;
+
+    let x_inc = axis_width / barchart.data().len() as f32;
+    let chart_height = barchart.height();
+    for i in 0..barchart.data().len() {
+        draw_solid_rect(img, &barchart.meta_color(), 1, 10, start_x as i32, (*chart_height as f32 * 0.8) as i32);
+        let fmt_x_label = format!("{:.1}", x_label);
+        draw_text(img, &fmt_x_label, start_x as u32, 0, "Lato-Regular", 10.0, &barchart.meta_color());
+
+        start_x += x_inc;
+        x_label += x_unit;
+
+    }
+}
 
 // // Draw grid onto the chart.
 // fn drawGrid(img: &mut DynamicImage, barchart: &Chart, chart_type: &str) {
