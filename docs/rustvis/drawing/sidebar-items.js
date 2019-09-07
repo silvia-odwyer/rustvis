@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["create_gradient","Create a gradient element in the shape of a Rect."],["create_gradient_preset","Apply a preset gradient by passing in a name. "],["draw_preset_rect_gradient","Preset: Draw a gradient rectangle filled with a gradient."],["draw_solid_rect","Draw a solid rectangle with a given background colour. "]]});

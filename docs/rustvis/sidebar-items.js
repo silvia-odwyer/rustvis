@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["new_with_background",""],["open_image",""],["save_image",""]],"mod":[["barchart",""],["drawing",""],["linechart",""],["text",""]],"struct":[["Rgb","Rgb color type."]]});

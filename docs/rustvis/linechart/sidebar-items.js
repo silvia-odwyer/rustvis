@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["create_linechart","Create a linechart and return this as an image."],["create_linechart_points","Create a linechart with points and return this as an image."],["draw_linechart","Draw a linechart, with a specified title and data."],["draw_linechart_points","Draw a linechart with points, containing a specified title and data."]]});
