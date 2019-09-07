@@ -36,13 +36,6 @@ a mutable reference to the drawing function.
 
 ## Run The Examples
 
-<!-- ## Cargo Status -->
-<!-- `GDL` can be installed via Cargo by declaring the following dependency in your Cargo.toml file:
-```toml
-[dependencies]
-GDL-rs = "*"
-``` -->
-
 Clone this repo:
 ```sh
 git clone https://github.com/silvia-odwyer/rustvis
@@ -50,7 +43,6 @@ git clone https://github.com/silvia-odwyer/rustvis
 
 Run the binary, which will create a sample barchart:
 ```sh
-cd crate
 cargo run --release 
 ```
 
