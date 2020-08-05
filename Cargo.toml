@@ -7,6 +7,6 @@ edition = "2018"
 [dependencies]
 image = "0.21.2"
 imageproc = "0.18.0"
-time="*"
+time= "^0.1"
 rusttype="0.8.3"
 palette="*"
